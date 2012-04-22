@@ -1,0 +1,18 @@
+start = expression
+
+expression = (comment/ whitespace)* e:(atom / exprlist / quote) (comment/ whitespace)*
+                { return e; }
+validchar = [0-9a-zA-Z_?!+=@#$%^&*/.-]
+
+atom = whitespace* chars:validchar+ whitespace*
+        { return chars.join(""); }
+
+exprlist = whitespace* "(" f:atom s:(atom/exprlist)* ")" whitespace*
+        { return [f].concat(s); }
+
+whitespace = [ \t\n\r]
+
+quote = "'" e:expression
+        { return ["quote", e]; }
+
+comment = ';;' [^\n\r]*
