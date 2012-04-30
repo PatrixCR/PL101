@@ -1,0 +1,26 @@
+start = (whitespace/comment)* e:(sequence / basic_el) (whitespace/comment)*
+    { return e; }
+
+whitespace = [ \t\n\r]
+
+sequence = l:(basic_el) comment* r:(sequence / basic_el)
+    { return { tag: 'seq', left: l, right: r }; }
+
+comment = '-' [^\n\r]* [\n\r]?
+
+basic_el = par / note / rest / repeat
+
+note = whitespace* n:([a-g] [0-9]) ":" d:[0-9]+ whitespace*
+    { return { tag: 'note', pitch: n.join(""), dur: +d.join("") }; }
+
+par = whitespace* "|" p:parseq "|" whitespace*
+    { return p; }
+
+parseq = whitespace* l:note r:(parseq / note) whitespace*
+    { return { tag: 'par', left: l, right: r }; }
+
+rest = whitespace* "." ":" d:[0-9]+ whitespace*
+    { return { tag: 'rest', dur: +d.join("") }; }
+
+repeat = whitespace* "(" e:(sequence / basic_el) ")" whitespace* "*" whitespace* whitespace* n:[0-9]+
+    { return { tag: 'repeat', section: e, count: +n.join("") }; }
