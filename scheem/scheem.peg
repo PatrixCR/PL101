@@ -4,7 +4,9 @@ expression = (comment/ whitespace)* e:(atom / exprlist / quote) (comment/ whites
                 { return e; }
 validchar = [0-9a-zA-Z_?!+=@#$%^&*/.-]
 
-atom = whitespace* chars:validchar+ whitespace*
+atom = whitespace* num:[0-9]+ whitespace*
+        { return +num.join(""); } /
+       whitespace* chars:validchar+ whitespace*
         { return chars.join(""); }
 
 exprlist = whitespace* "(" f:atom s:(atom/exprlist)* ")" whitespace*
