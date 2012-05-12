@@ -64,3 +64,8 @@ var evalScheem = function (expr, env) {
 var evalScheemString = function (str, env) {
     return evalScheem(SCHEEM.parse(str), env);
 }
+
+// If we are used as Node module, export evalScheem
+if (typeof module !== 'undefined') {
+    module.exports.evalScheem = evalScheem;
+}
