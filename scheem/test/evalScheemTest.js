@@ -42,23 +42,36 @@ suite('arithmetic', function() {
     });
 });
 
-suite('variable assignment', function() {
+suite('environment', function() {
     test('define', function() {
-        var env = {};
-        evalScheem(['define', 'x', 5], env)
+        var env = { bindings: {}, outer: {bindings: {x: 3}, outer: {}}};
+        evalScheem(['define', 'x', 5], env);
         assert.deepEqual(
-            env, {x: 5}
+            env, {bindings: {x: 5}, outer: {bindings: {x: 3}, outer: {}}}
+        );
+    });
+    test('define on empty env', function() {
+        var env = {};
+        evalScheem(['define', 'x', 5], env);
+        assert.deepEqual(
+            env, {bindings: {x: 5}, outer: {}}
         );
     });
     test('set!', function() {
-        var env = {x: 3};
-        evalScheem(['set!', 'x', 5], env)
+        var env = {bindings: {a: 4}, outer: {bindings: {x: 3}, outer: {}}};
+        evalScheem(['set!', 'x', 5], env);
         assert.deepEqual(
-            env, {x: 5}
+            env, {bindings: {a: 4}, outer: {bindings: {x: 5}, outer: {}}}
         );
     });
-    test('set! on undefined variable', function() {
+    test('set! on empty env', function() {
         var env = {};
+        expect(function () {
+            evalScheem(['set!', 'x', 5], env);
+        }).to.throw();
+    });
+    test('set! on undefined variable', function() {
+        var env = {bindings: {a: 4}, outer: {x: 3}};
         expect(function () {
             evalScheem(['set!', 'x', 5], env);
         }).to.throw();
@@ -89,7 +102,7 @@ suite('comparison operator', function() {
     });
     test('if', function() {
         assert.deepEqual(
-            evalScheem(['if', ['=', 'x', 5], 1, 0], {x: 5}),
+            evalScheem(['if', ['=', 'x', 5], 1, 0], {bindings: {x: 5}, outer: {}}),
             1
         );
     });

@@ -1,11 +1,11 @@
 var lookup = function (env, v) {
-    // Your code here
+    if (!(env.hasOwnProperty('bindings'))) throw new Error(v + " not found");
     if (env.bindings.hasOwnProperty(v)) return env.bindings[v];
     return arguments.callee(env.outer, v);    
 };
 
 var update = function (env, v, val) {
-    // Your code here
+    if (!(env.hasOwnProperty('bindings'))) throw new Error(v + " not found");
     if(env.bindings.hasOwnProperty(v)) {
         env.bindings[v] = val;
     } else {
@@ -14,7 +14,10 @@ var update = function (env, v, val) {
 };
 
 var add_binding = function (env, v, val) {
-    // Your code here
+    if (!(env.hasOwnProperty('bindings'))) {
+        env.bindings = {};
+        env.outer = {};
+    }
     env.bindings[v] = val;
 };
 
@@ -26,7 +29,7 @@ var evalScheem = function (expr, env) {
     }
     // Strings are variable references
     if (typeof expr === 'string') {
-        return env[expr];
+        return lookup(env, expr);
     }
     // Look at head of list for operation
     switch (expr[0]) {
@@ -43,11 +46,10 @@ var evalScheem = function (expr, env) {
             return evalScheem(expr[1], env) /
                    evalScheem(expr[2], env);
         case 'define':
-            env[expr[1]] = evalScheem(expr[2], env);
+            add_binding(env, expr[1], evalScheem(expr[2], env));
             return 0;
         case 'set!':
-            if (typeof env[expr[1]] === 'undefined' || env[expr[1]] === null) throw new Error("variable not defined!");
-            env[expr[1]] = evalScheem(expr[2], env);
+            update(env, expr[1], evalScheem(expr[2], env));
             return 0;
         case 'begin':
             for (var i = 1, j = expr.length; i < j; i++) {
