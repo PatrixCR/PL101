@@ -1,3 +1,23 @@
+var lookup = function (env, v) {
+    // Your code here
+    if (env.bindings.hasOwnProperty(v)) return env.bindings[v];
+    return arguments.callee(env.outer, v);    
+};
+
+var update = function (env, v, val) {
+    // Your code here
+    if(env.bindings.hasOwnProperty(v)) {
+        env.bindings[v] = val;
+    } else {
+        arguments.callee(env.outer, v, val);
+    }
+};
+
+var add_binding = function (env, v, val) {
+    // Your code here
+    env.bindings[v] = val;
+};
+
 var evalScheem = function (expr, env) {
     // Numbers evaluate to themselves
     var res = 0, list;
