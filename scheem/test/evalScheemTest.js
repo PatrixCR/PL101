@@ -139,6 +139,37 @@ suite('expression sequence', function() {
     });
 });
 
+suite('function', function() {
+    var env = {
+        bindings: {
+            factorial : function (x) {
+                if(x === 1 || x === 0) return 1;
+                return x * env.bindings.factorial(x-1);
+            },
+            addAll: function () {
+                var res = 0;
+                for (var i = arguments.length - 1; i >= 0; i--) {
+                    res += arguments[i];
+                };
+                return res;
+            }
+        },
+        outer: {}
+    };
+    test('application on 1 arg', function() {
+        assert.deepEqual(
+            evalScheem(['factorial', ['+', 2, 3]], env),
+            120
+        );
+    });
+    test('application on multiple args', function() {
+        assert.deepEqual(
+            evalScheem(['addAll', ['+', 2, 3], ['*', 3, 3], 1, 15], env),
+            30
+        );
+    });
+});
+
 suite('parse', function() {
     test('a number', function() {
         assert.deepEqual(

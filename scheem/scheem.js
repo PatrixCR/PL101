@@ -1,7 +1,7 @@
 var lookup = function (env, v) {
     if (!(env.hasOwnProperty('bindings'))) throw new Error(v + " not found");
     if (env.bindings.hasOwnProperty(v)) return env.bindings[v];
-    return arguments.callee(env.outer, v);    
+    return lookup(env.outer, v);    
 };
 
 var update = function (env, v, val) {
@@ -9,7 +9,7 @@ var update = function (env, v, val) {
     if(env.bindings.hasOwnProperty(v)) {
         env.bindings[v] = val;
     } else {
-        arguments.callee(env.outer, v, val);
+        update(env.outer, v, val);
     }
 };
 
@@ -79,7 +79,14 @@ var evalScheem = function (expr, env) {
         case 'cdr':
             list = evalScheem(expr[1], env);
             list.shift();
-            return list;    
+            return list;
+        default:
+            var func = evalScheem(expr[0],env);
+            expr.shift();
+            var args = expr.map(function (x) {
+                return evalScheem(x, env);
+            });
+            return func.apply(undefined, args);    
     }
 };
 
