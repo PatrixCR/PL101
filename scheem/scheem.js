@@ -80,6 +80,13 @@ var evalScheem = function (expr, env) {
             list = evalScheem(expr[1], env);
             list.shift();
             return list;
+        case 'lambda-one':
+            return function(arg) {
+                var bnd = {};
+                bnd[expr[1]] = arg;
+                var newenv = { bindings: bnd, outer: env };
+                return evalScheem(expr[2], newenv);
+            };
         default:
             var func = evalScheem(expr[0],env);
             expr.shift();

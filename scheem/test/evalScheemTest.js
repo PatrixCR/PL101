@@ -168,6 +168,13 @@ suite('function', function() {
             30
         );
     });
+    test('using lambda-one', function() {
+        evalScheem(['define', 'times3', ['lambda-one', 'x', ['*', 'x', 3]]], env);
+        assert.deepEqual(
+            evalScheem([['lambda-one', 'x', ['*', 'x', 3]], 700], env),
+            2100
+        );
+    });
 });
 
 suite('parse', function() {
