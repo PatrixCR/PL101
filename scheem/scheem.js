@@ -83,17 +83,26 @@ var evalScheem = function (expr, env) {
         case 'lambda-one':
             return function(arg) {
                 var bnd = {};
-                bnd[expr[1]] = arg;
+                bnd[expr[1]] = evalScheem(arg, env);
                 var newenv = { bindings: bnd, outer: env };
                 return evalScheem(expr[2], newenv);
             };
+        case 'lambda':
+            return function() {
+                var bnd = {};
+                for (var i = expr[1].length - 1; i >= 0; i--) {
+                    bnd[expr[1][i]] = evalScheem(arguments[i], env);
+                };
+                var newenv = { bindings: bnd, outer: env };
+                return evalScheem(expr[2], newenv);
+            }
         default:
-            var func = evalScheem(expr[0],env);
-            expr.shift();
-            var args = expr.map(function (x) {
-                return evalScheem(x, env);
-            });
-            return func.apply(undefined, args);    
+            var func = evalScheem(expr[0], env);
+            var args = [];
+            for (var i = expr.length - 1; i >= 1; i--) {
+                args[i-1] = evalScheem(expr[i], env);
+            };
+            return func.apply(undefined, args);
     }
 };
 

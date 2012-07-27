@@ -71,9 +71,9 @@ suite('environment', function() {
         }).to.throw();
     });
     test('set! on undefined variable', function() {
-        var env = {bindings: {a: 4}, outer: {x: 3}};
+        var env = {bindings: {a: 4}, outer: {bindings: {x: 3}, outer: {}}};
         expect(function () {
-            evalScheem(['set!', 'x', 5], env);
+            evalScheem(['set!', 'y', 5], env);
         }).to.throw();
     });
 });
@@ -143,7 +143,7 @@ suite('function', function() {
     var env = {
         bindings: {
             factorial : function (x) {
-                if(x === 1 || x === 0) return 1;
+                if (x === 1 || x === 0) return 1;
                 return x * env.bindings.factorial(x-1);
             },
             addAll: function () {
@@ -152,7 +152,8 @@ suite('function', function() {
                     res += arguments[i];
                 };
                 return res;
-            }
+            },
+            v: 9
         },
         outer: {}
     };
@@ -171,8 +172,46 @@ suite('function', function() {
     test('using lambda-one', function() {
         evalScheem(['define', 'times3', ['lambda-one', 'x', ['*', 'x', 3]]], env);
         assert.deepEqual(
-            evalScheem([['lambda-one', 'x', ['*', 'x', 3]], 700], env),
+            evalScheem(['times3', 700], env),
             2100
+        );
+    });
+    test('using lambda - simple', function() {
+        evalScheem(['define', 'consecutiveMul', ['lambda', ['x', 'y', 'z'], ['*', 'x', ['*', 'y', 'z']]]], env);
+        assert.deepEqual(
+            evalScheem(['consecutiveMul', 3, 7, 4], env),
+            84
+        );
+    });
+    test('using lambda - passing a function', function() {
+        var fn = evalScheem(['lambda', ['x', 'y', 'z'], ['*', 'x', ['*', 'y', 'z']]], env);
+        assert.deepEqual(
+            fn('v', 2, ['addAll', 1, 1, 1, 1]),
+            72
+        );
+    });
+    test('using lambda - modify global var', function() {
+        evalScheem(['begin', ['define', 'modGlob', ['lambda', ['x'], ['set!', 'v', 'x']]], ['modGlob', 1533]], env);
+        assert.deepEqual(
+            evalScheem('v', env),
+            1533
+        );
+    });
+    test('using lambda - return inner func', function() {
+        evalScheem(['begin', 
+            ['define', 'mulBy', ['lambda', ['x'], ['lambda', ['y'], ['*', 'x', 'y']]]],
+            ['define', 'mulBy5', ['mulBy', 5]]], env);
+        assert.deepEqual(
+            evalScheem(['mulBy5', 40], env),
+            200
+        );
+    });
+    test('using lambda - define itself recursively', function() {
+        evalScheem(['define', 'cascSum', 
+            ['lambda', ['x'], ['if', ['<', 'x', 1], 0, ['+', 'x', ['cascSum', ['-', 'x', 1]]]]]], env);
+        assert.deepEqual(
+            evalScheem(['cascSum', 10], env),
+            55
         );
     });
 });
