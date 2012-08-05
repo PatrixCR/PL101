@@ -31,7 +31,11 @@ var initialEnv = {
         return lst;
     },
     alert: function(x){
-        alert(x);
+        if (typeof module !== 'undefined') {
+            console.log(x);
+        } else {
+            alert(x);
+        }
     }
 }
 
