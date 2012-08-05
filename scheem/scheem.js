@@ -18,6 +18,17 @@ var initialEnv = {
     '=': function(x,y) {
         if (x === y) return '#t';
         return '#f';
+    },
+    car: function(lst) {
+        return lst.shift();
+    },
+    cdr: function(lst) {
+        lst.shift();
+        return lst;
+    },
+    cons: function(x, lst) {
+        lst.unshift(x);
+        return lst;
     }
 }
 
@@ -71,21 +82,11 @@ var evalScheem = function (expr, env) {
             return expr[1];
         case 'if':
             return evalScheem(expr[1], env) === '#t' ? evalScheem(expr[2], env) : evalScheem(expr[3], env);
-        case 'cons':
-            list = evalScheem(expr[2], env);
-            list.unshift(evalScheem(expr[1], env));
-            return list;
-        case 'car':
-            return evalScheem(expr[1], env).shift();
-        case 'cdr':
-            list = evalScheem(expr[1], env);
-            list.shift();
-            return list ;
-        case 'let-one':
-            var bnds = {};
-            bnds[expr[1]] = evalScheem(expr[2], env);
-            var newenv = { bindings: bnds, outer: env};
-            return evalScheem(expr[3], newenv);
+        // case 'let-one':
+        //     var bnds = {};
+        //     bnds[expr[1]] = evalScheem(expr[2], env);
+        //     var newenv = { bindings: bnds, outer: env};
+        //     return evalScheem(expr[3], newenv);
         case 'let':
             var bnds = {};
             for (var i = expr[1].length - 1; i >= 0; i--) {
@@ -93,13 +94,13 @@ var evalScheem = function (expr, env) {
             }
             var newenv = { bindings: bnds, outer: env};
             return evalScheem(expr[2], newenv);
-        case 'lambda-one':
-            return function(arg) {
-                var bnd = {};
-                bnd[expr[1]] = evalScheem(arg, env);
-                var newenv = { bindings: bnd, outer: env };
-                return evalScheem(expr[2], newenv);
-            };
+        // case 'lambda-one':
+        //     return function(arg) {
+        //         var bnd = {};
+        //         bnd[expr[1]] = evalScheem(arg, env);
+        //         var newenv = { bindings: bnd, outer: env };
+        //         return evalScheem(expr[2], newenv);
+        //     };
         case 'lambda':
             return function() {
                 var bnd = {};

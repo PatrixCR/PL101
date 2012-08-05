@@ -57,13 +57,13 @@ suite('environment', function() {
             env, {bindings: {x: 5}, outer: {}}
         );
     });
-    test('let-one', function() {
-        var env = {};
-        var result = evalScheem(['let-one', 'x', 5, ['+', ['let-one', 'x', 4, 'x'], ['let-one', 'y', 7, 'x']]], env);
-        assert.deepEqual(
-            result, 9
-        );
-    });
+    // test('let-one', function() {
+    //     var env = {};
+    //     var result = evalScheem(['let-one', 'x', 5, ['+', ['let-one', 'x', 4, 'x'], ['let-one', 'y', 7, 'x']]], env);
+    //     assert.deepEqual(
+    //         result, 9
+    //     );
+    // });
     test('let', function() {
         var env = {};
         var result = evalScheem(['let', [['x', 5], ['y', 4]], ['+', ['let', [['x', 3]], 'y'], ['let', [['y', 7]], 'x']]], env);
@@ -183,13 +183,13 @@ suite('function', function() {
             30
         );
     });
-    test('using lambda-one', function() {
-        evalScheem(['define', 'times3', ['lambda-one', 'x', ['*', 'x', 3]]], env);
-        assert.deepEqual(
-            evalScheem(['times3', 700], env),
-            2100
-        );
-    });
+    // test('using lambda-one', function() {
+    //     evalScheem(['define', 'times3', ['lambda-one', 'x', ['*', 'x', 3]]], env);
+    //     assert.deepEqual(
+    //         evalScheem(['times3', 700], env),
+    //         2100
+    //     );
+    // });
     test('using lambda - simple', function() {
         evalScheem(['define', 'consecutiveMul', ['lambda', ['x', 'y', 'z'], ['*', 'x', ['*', 'y', 'z']]]], env);
         assert.deepEqual(
