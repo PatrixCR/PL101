@@ -44,7 +44,6 @@ var compileT = function (t, musexpr) {
 };
 
 var compile = function (musexpr) {
-    // your code here
     return compileT(0, musexpr);
 };
 

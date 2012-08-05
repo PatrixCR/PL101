@@ -1,5 +1,31 @@
+var initialEnv = {
+    '+': function(x,y) {
+        return x + y;
+    },
+    '-': function(x,y) {
+        return x - y;
+    },
+    '*': function(x,y) {
+        return x * y;
+    },
+    '/': function(x,y) {
+        return x / y;
+    },
+    '<': function(x,y) {
+        if (x < y) return '#t';
+        return '#f';
+    },
+    '=': function(x,y) {
+        if (x === y) return '#t';
+        return '#f';
+    }
+}
+
 var lookup = function (env, v) {
-    if (!(env.hasOwnProperty('bindings'))) throw new Error(v + " not found");
+    if (!(env.hasOwnProperty('bindings'))) {
+        if (initialEnv.hasOwnProperty(v)) return initialEnv[v];
+        throw new Error(v + " not found");
+    }
     if (env.bindings.hasOwnProperty(v)) return env.bindings[v];
     return lookup(env.outer, v);    
 };
@@ -22,29 +48,14 @@ var add_binding = function (env, v, val) {
 };
 
 var evalScheem = function (expr, env) {
-    // Numbers evaluate to themselves
     var res = 0, list;
     if (typeof expr === 'number') {
         return expr;
     }
-    // Strings are variable references
     if (typeof expr === 'string') {
         return lookup(env, expr);
     }
-    // Look at head of list for operation
     switch (expr[0]) {
-        case '+':
-            return evalScheem(expr[1], env) +
-                   evalScheem(expr[2], env);
-        case '-':
-            return evalScheem(expr[1], env) -
-                   evalScheem(expr[2], env);
-        case '*':
-            return evalScheem(expr[1], env) *
-                   evalScheem(expr[2], env);
-        case '/':
-            return evalScheem(expr[1], env) /
-                   evalScheem(expr[2], env);
         case 'define':
             add_binding(env, expr[1], evalScheem(expr[2], env));
             return 0;
@@ -58,16 +69,6 @@ var evalScheem = function (expr, env) {
             return res;
         case 'quote':
             return expr[1];
-        case '<':
-            if (evalScheem(expr[1], env) <
-                   evalScheem(expr[2], env)) return '#t';
-            return '#f';
-        case '=':
-            var eq =
-                (evalScheem(expr[1], env) ===
-                 evalScheem(expr[2], env));
-            if (eq) return '#t';
-            return '#f';
         case 'if':
             return evalScheem(expr[1], env) === '#t' ? evalScheem(expr[2], env) : evalScheem(expr[3], env);
         case 'cons':
@@ -79,7 +80,19 @@ var evalScheem = function (expr, env) {
         case 'cdr':
             list = evalScheem(expr[1], env);
             list.shift();
-            return list;
+            return list ;
+        case 'let-one':
+            var bnds = {};
+            bnds[expr[1]] = evalScheem(expr[2], env);
+            var newenv = { bindings: bnds, outer: env};
+            return evalScheem(expr[3], newenv);
+        case 'let':
+            var bnds = {};
+            for (var i = expr[1].length - 1; i >= 0; i--) {
+                bnds[expr[1][i][0]] = evalScheem(expr[1][i][1], env);
+            }
+            var newenv = { bindings: bnds, outer: env};
+            return evalScheem(expr[2], newenv);
         case 'lambda-one':
             return function(arg) {
                 var bnd = {};
@@ -101,7 +114,7 @@ var evalScheem = function (expr, env) {
             var args = [];
             for (var i = expr.length - 1; i >= 1; i--) {
                 args[i-1] = evalScheem(expr[i], env);
-            };
+            }
             return func.apply(undefined, args);
     }
 };

@@ -57,6 +57,20 @@ suite('environment', function() {
             env, {bindings: {x: 5}, outer: {}}
         );
     });
+    test('let-one', function() {
+        var env = {};
+        var result = evalScheem(['let-one', 'x', 5, ['+', ['let-one', 'x', 4, 'x'], ['let-one', 'y', 7, 'x']]], env);
+        assert.deepEqual(
+            result, 9
+        );
+    });
+    test('let', function() {
+        var env = {};
+        var result = evalScheem(['let', [['x', 5], ['y', 4]], ['+', ['let', [['x', 3]], 'y'], ['let', [['y', 7]], 'x']]], env);
+        assert.deepEqual(
+            result, 9
+        );
+    });
     test('set!', function() {
         var env = {bindings: {a: 4}, outer: {bindings: {x: 3}, outer: {}}};
         evalScheem(['set!', 'x', 5], env);
@@ -142,7 +156,7 @@ suite('expression sequence', function() {
 suite('function', function() {
     var env = {
         bindings: {
-            factorial : function (x) {
+            factorial: function (x) {
                 if (x === 1 || x === 0) return 1;
                 return x * env.bindings.factorial(x-1);
             },
