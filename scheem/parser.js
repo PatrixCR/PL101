@@ -319,16 +319,10 @@ SCHEEM = (function(){
             result2 = parse_atom();
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_atom();
-              if (result4 === null) {
-                result4 = parse_exprlist();
-              }
+              result4 = parse_expression();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_atom();
-                if (result4 === null) {
-                  result4 = parse_exprlist();
-                }
+                result4 = parse_expression();
               }
               if (result3 !== null) {
                 if (input.charCodeAt(pos) === 41) {

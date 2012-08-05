@@ -29,6 +29,9 @@ var initialEnv = {
     cons: function(x, lst) {
         lst.unshift(x);
         return lst;
+    },
+    alert: function(x){
+        alert(x);
     }
 }
 
