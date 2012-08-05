@@ -18,26 +18,26 @@ if (typeof module !== 'undefined') {
 suite('arithmetic', function() {
     test('add', function() {
         assert.deepEqual(
-            evalScheem(['+', 1, ['+', 1, 2]], {}),
-            4
+            evalScheem(['+', 1, ['+', 1, 2], 2, 4], {}),
+            10
         );
     });
     test('substraction', function() {
         assert.deepEqual(
-            evalScheem(['-', 10, ['-', 8, 2]], {}),
-            4
+            evalScheem(['-', 10, ['-', 8, 2], 4], {}),
+            0
         );
     });
     test('multiplication', function() {
         assert.deepEqual(
-            evalScheem(['*', 1, ['*', 4, 8]], {}),
-            32
+            evalScheem(['*', 1, ['*', 4, 8], 2, 2], {}),
+            128
         );
     });
     test('division', function() {
         assert.deepEqual(
-            evalScheem(['/', 40, ['/', 20, 10]], {}),
-            20
+            evalScheem(['/', 40, ['/', 20, 10], 5 , 4], {}),
+            1
         );
     });
 });
