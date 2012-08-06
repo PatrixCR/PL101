@@ -42,6 +42,21 @@ suite('arithmetic', function() {
     });
 });
 
+suite('logical operator', function() {
+    test('and', function() {
+        assert.deepEqual(
+            evalScheem(['&', ['=', 20, 20], ['<', 2, 20]], {}),
+            '#t'
+        );
+    });
+    test('or', function() {
+        assert.deepEqual(
+            evalScheem(['|', ['=', 21, 20], ['<', 2, 20]], {}),
+            '#t'
+        );
+    });
+});
+
 suite('environment', function() {
     test('define', function() {
         var env = { bindings: {}, outer: {bindings: {x: 3}, outer: {}}};
@@ -111,6 +126,24 @@ suite('comparison operator', function() {
     test('less than', function() {
         assert.deepEqual(
             evalScheem(['<', 5, ['*', 3, 2]], {}),
+            '#t'
+        );
+    });
+    test('more than', function() {
+        assert.deepEqual(
+            evalScheem(['>', 5, ['*', 3, 2]], {}),
+            '#f'
+        );
+    });
+    test('less than or equal to', function() {
+        assert.deepEqual(
+            evalScheem(['<=', 5, ['+', 3, 2]], {}),
+            '#t'
+        );
+    });
+    test('more than or equal to', function() {
+        assert.deepEqual(
+            evalScheem(['>=', 5, ['+', 3, 2]], {}),
             '#t'
         );
     });

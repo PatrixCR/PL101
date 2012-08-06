@@ -13,26 +13,46 @@ var initialEnv = {
         }
         return c;
     },
-    '*': function(x,y) {
+    '*': function() {
         var c = arguments[0];
         for (var i = arguments.length - 1; i >= 1; i--) {
             c *= arguments[i]
         }
         return c;
     },
-    '/': function(x,y) {
+    '/': function() {
         var c = arguments[0];
         for (var i = 1, j = arguments.length; i < j; i++) {
             c /= arguments[i]
         }
         return c;
     },
-    '<': function(x,y) {
+    '<': function(x, y) {
         if (x < y) return '#t';
         return '#f';
     },
-    '=': function(x,y) {
+    '>': function(x, y) {
+        if (x > y) return '#t';
+        return '#f';
+    },
+    '=': function(x, y) {
         if (x === y) return '#t';
+        return '#f';
+    },
+    '<=': function(x, y) {
+        if (x <= y) return '#t';
+        return '#f';
+    },
+    '>=': function(x, y) {
+        if (x >= y) return '#t';
+        return '#f';
+    },
+    '&': function(x, y) {
+        if ((x === '#t') && (y === '#t')) return '#t';
+        return '#f';
+    },
+    '|': function(x, y) {
+        if ((x === '#t') || (y === '#t')) return '#t';
         return '#f';
     },
     car: function(lst) {
