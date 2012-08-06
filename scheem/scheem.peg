@@ -3,7 +3,7 @@ start = expression
 expression = (comment/ whitespace)* e:(atom / exprlist / quote) (comment/ whitespace)*
                 { return e; }
                 
-validchar = [0-9a-zA-Z_?!+=@#$%^&*/.|-]
+validchar = [0-9a-zA-Z_?!+=@#$%^&*/.|><-]
 
 atom = whitespace* num:[0-9]+ whitespace*
         { return +num.join(""); } /
