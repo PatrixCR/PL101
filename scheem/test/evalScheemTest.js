@@ -174,6 +174,12 @@ suite('list manipulation', function() {
             [3, 2]
         );
     });
+    test('reverse', function() {
+        assert.deepEqual(
+            evalScheem(['reverse', ['quote', [1, 3, 2]]], {}),
+            [2, 3, 1]
+        );
+    });
 });
 
 suite('expression sequence', function() {

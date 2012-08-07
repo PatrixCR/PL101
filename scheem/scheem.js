@@ -66,6 +66,13 @@ var initialEnv = {
         lst.unshift(x);
         return lst;
     },
+    reverse: function(lst) {
+        var lstCopy = [];
+        for (var i = lst.length - 1, j = 0; i >= 0; i--, j++) {
+            lstCopy[j] = lst[i]
+        }
+        return lstCopy;
+    },
     alert: function(x){
         if (typeof module !== 'undefined') {
             console.log(x);
