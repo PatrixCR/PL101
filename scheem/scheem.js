@@ -67,11 +67,10 @@ var initialEnv = {
         return lst;
     },
     reverse: function(lst) {
-        var lstCopy = [];
-        for (var i = lst.length - 1, j = 0; i >= 0; i--, j++) {
-            lstCopy[j] = lst[i]
-        }
-        return lstCopy;
+        return lst.reverse();
+    },
+    map: function(fn, lst) {
+        return lst.map(fn);
     },
     alert: function(x){
         if (typeof module !== 'undefined') {

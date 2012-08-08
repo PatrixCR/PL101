@@ -180,6 +180,12 @@ suite('list manipulation', function() {
             [2, 3, 1]
         );
     });
+    test('map', function() {
+        assert.deepEqual(
+            evalScheem(['map', ['lambda', ['x'], ['*', 'x', 'x']], ['quote', [1, 3, 2]]], {}),
+            [1, 9, 4]
+        );
+    });
 });
 
 suite('expression sequence', function() {
