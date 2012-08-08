@@ -1,31 +1,27 @@
 var initialEnv = {
     '+': function() {
-        var c = 0;
-        for (var i = arguments.length - 1; i >= 0; i--) {
-            c += arguments[i]
-        }
-        return c;
+        var args = Array.prototype.slice.call(arguments);
+        return args.reduce(function(x, y) {
+            return x + y;
+        });
     },
     '-': function() {
-        var c = arguments[0];
-        for (var i = 1, j = arguments.length; i < j; i++) {
-            c -= arguments[i]
-        }
-        return c;
+        var args = Array.prototype.slice.call(arguments);
+        return args.reduce(function(x, y) {
+            return x - y;
+        });
     },
     '*': function() {
-        var c = arguments[0];
-        for (var i = arguments.length - 1; i >= 1; i--) {
-            c *= arguments[i]
-        }
-        return c;
+        var args = Array.prototype.slice.call(arguments);
+        return args.reduce(function(x, y) {
+            return x * y;
+        });
     },
     '/': function() {
-        var c = arguments[0];
-        for (var i = 1, j = arguments.length; i < j; i++) {
-            c /= arguments[i]
-        }
-        return c;
+        var args = Array.prototype.slice.call(arguments);
+        return args.reduce(function(x, y) {
+            return x / y;
+        });
     },
     '<': function(x, y) {
         if (x < y) return '#t';
@@ -71,6 +67,12 @@ var initialEnv = {
     },
     map: function(fn, lst) {
         return lst.map(fn);
+    },
+    flatten: function() {
+        var args = Array.prototype.slice.call(arguments);
+        return args.reduce(function(x, y) {
+            return x.concat(y);
+        });
     },
     alert: function(x){
         if (typeof module !== 'undefined') {

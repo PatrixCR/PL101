@@ -294,7 +294,7 @@ SCHEEM = (function(){
       }
       
       function parse_exprlist() {
-        var result0, result1, result2, result3, result4, result5, result6;
+        var result0, result1, result2, result3, result4, result5;
         var pos0, pos1;
         
         pos0 = pos;
@@ -316,37 +316,31 @@ SCHEEM = (function(){
             }
           }
           if (result1 !== null) {
-            result2 = parse_atom();
+            result2 = [];
+            result3 = parse_expression();
+            while (result3 !== null) {
+              result2.push(result3);
+              result3 = parse_expression();
+            }
             if (result2 !== null) {
-              result3 = [];
-              result4 = parse_expression();
-              while (result4 !== null) {
-                result3.push(result4);
-                result4 = parse_expression();
+              if (input.charCodeAt(pos) === 41) {
+                result3 = ")";
+                pos++;
+              } else {
+                result3 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\")\"");
+                }
               }
               if (result3 !== null) {
-                if (input.charCodeAt(pos) === 41) {
-                  result4 = ")";
-                  pos++;
-                } else {
-                  result4 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\")\"");
-                  }
+                result4 = [];
+                result5 = parse_whitespace();
+                while (result5 !== null) {
+                  result4.push(result5);
+                  result5 = parse_whitespace();
                 }
                 if (result4 !== null) {
-                  result5 = [];
-                  result6 = parse_whitespace();
-                  while (result6 !== null) {
-                    result5.push(result6);
-                    result6 = parse_whitespace();
-                  }
-                  if (result5 !== null) {
-                    result0 = [result0, result1, result2, result3, result4, result5];
-                  } else {
-                    result0 = null;
-                    pos = pos1;
-                  }
+                  result0 = [result0, result1, result2, result3, result4];
                 } else {
                   result0 = null;
                   pos = pos1;
@@ -368,7 +362,7 @@ SCHEEM = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, f, s) { return [f].concat(s); })(pos0, result0[2], result0[3]);
+          result0 = (function(offset, e) { return e; })(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;

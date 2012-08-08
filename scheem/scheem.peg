@@ -10,8 +10,8 @@ atom = whitespace* num:[0-9]+ whitespace*
        whitespace* chars:validchar+ whitespace*
         { return chars.join(""); }
 
-exprlist = whitespace* "(" f:atom s:(expression)* ")" whitespace*
-        { return [f].concat(s); }
+exprlist = whitespace* "(" e:(expression)* ")" whitespace*
+        { return e; }
 
 whitespace = [ \t\n\r]
 

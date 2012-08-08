@@ -186,6 +186,12 @@ suite('list manipulation', function() {
             [1, 9, 4]
         );
     });
+    test('flatten', function() {
+        assert.deepEqual(
+            evalScheem(['flatten', ['quote', [1, [[1, 2], 3, [4,[5]]], [2,7]]]], {}),
+            [1, 1, 2, 3, 4, 5, 2, 7]
+        );
+    });
 });
 
 suite('expression sequence', function() {
