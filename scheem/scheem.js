@@ -68,10 +68,16 @@ var initialEnv = {
     map: function(fn, lst) {
         return lst.map(fn);
     },
-    flatten: function(lst) {
-        return lst.reduce(function(x, y) {
-            return x.concat(y);
+    flatten: function(lst, res) {
+        res = res || [];
+        lst.forEach(function(x){
+            if (typeof x === 'number') {
+                res.push(x);
+            } else {
+                initialEnv.flatten(x, res);
+            }
         });
+        return res;
     },
     alert: function(x){
         if (typeof module !== 'undefined') {
