@@ -1,16 +1,14 @@
 start = expression
 
-expression = (comment/ whitespace)* e:(atom / exprlist / quote) (comment/ whitespace)*
-                { return e; }
+expression = (whitespace / comment)* e:(atom / exprlist / quote) (whitespace / comment)*
+                {return e;}
                 
 validchar = [0-9a-zA-Z_?!+=@#$%^&*/.|><-]
 
-atom = whitespace* num:[0-9]+ whitespace*
-        { return +num.join(""); } /
-       whitespace* chars:validchar+ whitespace*
-        { return chars.join(""); }
+atom = num:[0-9]+ { return +num.join(""); } /
+       chars:validchar+ { return chars.join(""); }
 
-exprlist = whitespace* "(" e:(expression)* ")" whitespace*
+exprlist = "(" e:(expression)* ")"
         { return e; }
 
 whitespace = [ \t\n\r]

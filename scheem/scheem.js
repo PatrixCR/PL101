@@ -68,9 +68,8 @@ var initialEnv = {
     map: function(fn, lst) {
         return lst.map(fn);
     },
-    flatten: function() {
-        var args = Array.prototype.slice.call(arguments);
-        return args.reduce(function(x, y) {
+    flatten: function(lst) {
+        return lst.reduce(function(x, y) {
             return x.concat(y);
         });
     },
