@@ -1,18 +1,18 @@
-
 <html>
 <head>
   <meta charset="utf-8">
   <title>Scheem Live Demo</title>
-  <script src=
-    "http://nathansuniversity.com/js//jquery-1.7.1.min.js">
-  </script>
-  <script src="https://raw.github.com/PatrixCR/PL101/master/scheem/parser.js"></script>
-  <script src="https://raw.github.com/PatrixCR/PL101/master/scheem/scheem.js"></script>
+  <link rel="stylesheet" href="../../CodeMirror/lib/codemirror.css">
+  <link rel="stylesheet" href="../../CodeMirror/theme/cobalt.css">
+  <script src="../../jquery-1.7.2.min.js"></script>
+  <script src="../scheem.js"></script>
+  <script src="../parser.js"></script>
+  <script src="../../CodeMirror/lib/codemirror.js"></script>
+  <script src="../../CodeMirror/mode/scheme/scheme.js"></script>
 </head>
 <body>
 
-<textarea id="input" style="width:800px; height:300px;">
-(+ 1 2)</textarea>
+<textarea id="input" style="width:800px; height:300px;">(+ 1 2)</textarea>
 
 <input id="submitbutton" type="button" value="Run" />
 
@@ -25,10 +25,15 @@
   var log_console = function(msg) {
       $('#console').append('<p>' + msg + '</p>');
   };
+  var myTextArea = $("#input")[0];
+  var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+    mode:  "scheme",
+    theme: "cobalt"
+  });
   // After page load
-  $(function() {
+  $(document).ready(function() {
     $('#submitbutton').click(function() {
-        var user_text = $('#input').val();
+        var user_text = myCodeMirror.getValue();
         $('#console').html(''); // clear console
         log_console('Your input was: "' + user_text + '"');
         try {
