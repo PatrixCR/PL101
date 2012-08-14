@@ -115,7 +115,7 @@ var add_binding = function (env, v, val) {
 };
 
 var evalScheem = function (expr, env) {
-    var res = 0, list;
+    var res = 0;
     if (typeof expr === 'number') {
         return expr;
     }
