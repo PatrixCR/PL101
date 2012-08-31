@@ -1,3 +1,29 @@
+var lookup = function (env, v) {
+    if (!(env.hasOwnProperty('bindings'))) {
+        if (initialEnv.hasOwnProperty(v)) return initialEnv[v];
+        throw new Error(v + " not found");
+    }
+    if (env.bindings.hasOwnProperty(v)) return env.bindings[v];
+    return lookup(env.outer, v);    
+};
+
+var update = function (env, v, val) {
+    if (!(env.hasOwnProperty('bindings'))) throw new Error(v + " not found");
+    if(env.bindings.hasOwnProperty(v)) {
+        env.bindings[v] = val;
+    } else {
+        update(env.outer, v, val);
+    }
+};
+
+var add_binding = function (env, v, val) {
+    if (!(env.hasOwnProperty('bindings'))) {
+        env.bindings = {};
+        env.outer = {};
+    }
+    env.bindings[v] = val;
+};
+
 // Evaluate a Tortoise expression, return value
 var evalExpr = function (expr, env) {
     // Numbers evaluate to themselves
