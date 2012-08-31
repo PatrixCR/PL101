@@ -32,11 +32,57 @@ var evalExpr = function (expr, env) {
 };
 
 var evalStatement = function (stmt, env) {
+    var val = undefined;
     // Statements always have tags
     switch(stmt.tag) {
         // A single expression
         case 'ignore':
             // Just evaluate expression
             return evalExpr(stmt.body, env);
+        // Declare new variable
+        case 'var':
+            // New variable gets default value of 0
+            add_binding(env, stmt.name, 0);
+            return 0;
+        case ':=':
+            // Evaluate right hand side
+            val = evalExpr(stmt.right, env);
+            update(env, stmt.left, val);
+            return val;
+        case 'if':
+            if(evalExpr(stmt.expr, env)) {
+                val = evalStatements(stmt.body, env);
+            }
+            return val;
+        case 'repeat':
+            for(var i = evalExpr(stmt.expr, env) - 1; i >= 0; i--) {
+                val = evalStatements(stmt.body, env);
+            }
+            return val;
+        case 'define':
+            // name args body
+            var new_func = function() {
+                // This function takes any number of arguments
+                var i;
+                var new_env;
+                var new_bindings;
+                new_bindings = { };
+                for(i = 0; i < stmt.args.length; i++) {
+                    new_bindings[stmt.args[i]] = arguments[i];
+                }
+                new_env = { bindings: new_bindings, outer: env };
+                return evalStatements(stmt.body, new_env);
+            };
+            add_binding(env, stmt.name, new_func);
+            return 0;
     }
+};
+
+var evalStatements = function (seq, env) {
+    var i;
+    var val = undefined;
+    for(i = 0; i < seq.length; i++) {
+        val = evalStatement(seq[i], env);
+    }
+    return val;
 };
