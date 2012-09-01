@@ -1,8 +1,5 @@
 var lookup = function (env, v) {
-    if (!(env.hasOwnProperty('bindings'))) {
-        if (initialEnv.hasOwnProperty(v)) return initialEnv[v];
-        throw new Error(v + " not found");
-    }
+    if (!(env.hasOwnProperty('bindings'))) throw new Error(v + " not found");
     if (env.bindings.hasOwnProperty(v)) return env.bindings[v];
     return lookup(env.outer, v);    
 };
@@ -24,28 +21,43 @@ var add_binding = function (env, v, val) {
     env.bindings[v] = val;
 };
 
-// Evaluate a Tortoise expression, return value
 var evalExpr = function (expr, env) {
-    // Numbers evaluate to themselves
     if (typeof expr === 'number') {
         return expr;
     }
-    // Look at tag to see what to do
     switch(expr.tag) {
-        // Simple built-in binary operations
         case '<':
             return evalExpr(expr.left, env) <
+                   evalExpr(expr.right, env);
+        case '<=':
+            return evalExpr(expr.left, env) <=
+                   evalExpr(expr.right, env);
+        case '>':
+            return evalExpr(expr.left, env) >
+                   evalExpr(expr.right, env);
+        case '>=':
+            return evalExpr(expr.left, env) >=
+                   evalExpr(expr.right, env);
+        case '!=':
+            return evalExpr(expr.left, env) !==
+                   evalExpr(expr.right, env);
+        case '>':
+            return evalExpr(expr.left, env) ===
                    evalExpr(expr.right, env);
         case '+':
             return evalExpr(expr.left, env) +
                    evalExpr(expr.right, env);
+        case '-':
+            return evalExpr(expr.left, env) -
+                   evalExpr(expr.right, env);
         case '*':
             return evalExpr(expr.left, env) *
                    evalExpr(expr.right, env);
+        case '/':
+            return evalExpr(expr.left, env) /
+                   evalExpr(expr.right, env);
         case 'call':
-            // Get function value
             var func = lookup(env, expr.name);
-            // Evaluate arguments to pass
             var ev_args = [];
             var i = 0;
             for(i = 0; i < expr.args.length; i++) {
@@ -59,19 +71,13 @@ var evalExpr = function (expr, env) {
 
 var evalStatement = function (stmt, env) {
     var val = undefined;
-    // Statements always have tags
     switch(stmt.tag) {
-        // A single expression
         case 'ignore':
-            // Just evaluate expression
             return evalExpr(stmt.body, env);
-        // Declare new variable
         case 'var':
-            // New variable gets default value of 0
             add_binding(env, stmt.name, 0);
             return 0;
         case ':=':
-            // Evaluate right hand side
             val = evalExpr(stmt.right, env);
             update(env, stmt.left, val);
             return val;
@@ -86,9 +92,7 @@ var evalStatement = function (stmt, env) {
             }
             return val;
         case 'define':
-            // name args body
             var new_func = function() {
-                // This function takes any number of arguments
                 var i;
                 var new_env;
                 var new_bindings;
