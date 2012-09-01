@@ -116,3 +116,10 @@ var evalStatements = function (seq, env) {
     }
     return val;
 };
+
+if (typeof module !== 'undefined') {
+    module.exports.lookup = lookup;
+    module.exports.evalExpr = evalExpr;
+    module.exports.evalStatement = evalStatement;
+    module.exports.evalStatements = evalStatements;
+}
