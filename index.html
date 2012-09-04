@@ -1,58 +1,10 @@
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Scheem Live Demo</title>
-  <link rel="stylesheet" href="https://raw.github.com/PatrixCR/PL101/master/CodeMirror/lib/codemirror.css">
-  <link rel="stylesheet" href="https://raw.github.com/PatrixCR/PL101/master/CodeMirror/theme/cobalt.css">
-  <script src="https://raw.github.com/PatrixCR/PL101/master/jquery-1.7.2.min.js"></script>
-  <script src="https://raw.github.com/PatrixCR/PL101/master/scheem/scheem.js"></script>
-  <script src="https://raw.github.com/PatrixCR/PL101/master/scheem/parser.js"></script>
-  <script src="https://raw.github.com/PatrixCR/PL101/master/CodeMirror/lib/codemirror.js"></script>
-  <script src="https://raw.github.com/PatrixCR/PL101/master/CodeMirror/mode/scheme/scheme.js"></script>
-</head>
-<body>
-
-<textarea id="input" style="width:800px; height:300px;">(+ 1 2)</textarea>
-
-<input id="submitbutton" type="button" value="Run" />
-
-<div id="console" class="console" style="border:solid 1px;">
-<p>This is where output goes.</p>
-</div>
-
-<script>
-  // Utility function to log messages
-  var log_console = function(msg) {
-      $('#console').append('<p>' + msg + '</p>');
-  };
-  var myTextArea = $("#input")[0];
-  var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
-    mode:  "scheme",
-    theme: "cobalt"
-  });
-  // After page load
-  $(document).ready(function() {
-    $('#submitbutton').click(function() {
-        var user_text = myCodeMirror.getValue();
-        $('#console').html(''); // clear console
-        log_console('Your input was: "' + user_text + '"');
-        try {
-            var parsed = SCHEEM.parse(user_text);
-            log_console('Parsed: ' + JSON.stringify(parsed));
-            try {
-                var result = evalScheem(parsed, {});
-                log_console('Result: ' + JSON.stringify(result));
-            }
-            catch(e) {
-                log_console('Eval Error: ' + e);
-            }
-        }
-        catch(e) {
-            log_console('Parse Error: ' + e);
-        }
-    });
-  });
-</script>
-
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>PL101</title>
+  </head>
+  <body>
+    <a href="./scheem.html">Scheem</a>
+    <a href="./tortoise.html">Tortoise</a>
+  </body>
 </html>
