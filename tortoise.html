@@ -11,13 +11,13 @@
     <div id="turtlecanvas" style="width:700px; height:600px; background-color: #eee;"></div>
 
     <script src=
-      "../../jquery-1.7.2.min.js">
+      "https://raw.github.com/PatrixCR/PL101/master/jquery-1.7.2.min.js">
     </script>
     <script src=
-      "../raphael-min.js">
+      "https://raw.github.com/PatrixCR/PL101/master/tortoise/raphael-min.js">
     </script>
-    <script src="../tortoise.js"></script>
-    <script src="../parser.js"></script>
+    <script src="https://raw.github.com/PatrixCR/PL101/master/tortoise/tortoise.js"></script>
+    <script src="https://raw.github.com/PatrixCR/PL101/master/tortoise/parser.js"></script>
     
     <script>
       var Turtle = function (id) {
@@ -42,7 +42,7 @@
       Turtle.prototype.updateTurtle = function () {
           if(this.turtleimg === undefined) {
               this.turtleimg = this.paper.image(
-                  "../turtle2.png",
+                  "https://raw.github.com/PatrixCR/PL101/master/tortoise/turtle2.png",
                   0, 0, 64, 64);
           }
           this.turtleimg.attr({
