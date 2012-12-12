@@ -29,12 +29,18 @@
         var myTextArea = $("#input")[0];
         var cb = function() {
           var input = myCodeMirror.getValue();
-          $('#console').html('');
+          log_console('Your input was: "' + user_text + '"');
           try {
-            var result = Util.interp(input);
-            log_console('Result: ' + JSON.stringify(result));
+            var parsed = SCHEEM.parse(user_text);
+            log_console('Parsed: ' + JSON.stringify(parsed));
+            try {
+              var result = evalScheem(parsed, {});
+              log_console('Result: ' + JSON.stringify(result));
+            } catch(e) {
+              log_console('Eval Error: ' + e);
+            }
           } catch(e) {
-            log_console('Error: ' + e.message);
+            log_console('Parse Error: ' + e);
           }
         };
         var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
