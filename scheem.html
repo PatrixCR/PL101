@@ -27,21 +27,21 @@
           $('#console').append('<p>' + msg + '</p>');
         };
         var myTextArea = $("#input")[0];
-        var cb = function() {
-          var input = myCodeMirror.getValue();
-          $('#console').html('');
-          try {
-            var result = Util.interp(input);
-            log_console('Result: ' + JSON.stringify(result));
-          } catch(e) {
-            log_console('Error: ' + e.message);
-          }
-        };
         var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
           mode:  "scheme",
           theme: "cobalt",
           onChange: cb
         }); 
+        var cb = function() {
+          var input = myCodeMirror.getValue();
+          $('#console').html('');
+          try {
+            var result = evalScheem(SCHEEM.parse(input), {});
+            log_console('Result: ' + JSON.stringify(result));
+          } catch(e) {
+            log_console('Error: ' + e.message);
+          }
+        };
         $('#submitbutton').click(function() {
             var user_text = myCodeMirror.getValue();
             $('#console').html(''); // clear console
