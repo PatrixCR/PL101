@@ -22,16 +22,26 @@
 
     <script>
       // Utility function to log messages
-      var log_console = function(msg) {
+      $(document).ready(function(){
+        var log_console = function(msg) {
           $('#console').append('<p>' + msg + '</p>');
-      };
-      var myTextArea = $("#input")[0];
-      var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
-        mode:  "scheme",
-        theme: "cobalt"
-      });
-      // After page load
-      $(document).ready(function() {
+        };
+        var myTextArea = $("#input")[0];
+        var cb = function() {
+          var input = myCodeMirror.getValue();
+          $('#console').html('');
+          try {
+            var result = Util.interp(input);
+            log_console('Result: ' + JSON.stringify(result));
+          } catch(e) {
+            log_console('Error: ' + e.message);
+          }
+        };
+        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+          mode:  "scheme",
+          theme: "cobalt",
+          onChange: cb
+        }); 
         $('#submitbutton').click(function() {
             var user_text = myCodeMirror.getValue();
             $('#console').html(''); // clear console
